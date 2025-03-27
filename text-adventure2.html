@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kids Learning Adventure Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      background-color: #e0f2f1;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00796b;
+      padding: 20px 0;
+      background-color: #b2dfdb;
+      margin: 0;
+      border-bottom: 2px solid #004d40;
+    }
+
+    .scene {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 800px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .scene img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .button-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 24px;
+      margin: 5px;
+      border: none;
+      background-color: #26a69a;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00897b;
+    }
+
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    #play_again_container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .scene {
+        padding: 15px;
+      }
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Kids Learning Adventure Game</h1>
+
+  <div id="game">
+    <div id="gender_selection" class="scene">
+      <p>Are you a boy or a girl?</p>
+      <div class="button-container">
+        <button onclick="setGender('boy')">Boy</button>
+        <button onclick="setGender('girl')">Girl</button>
+      </div>
+    </div>
+
+    <div id="introduction" class="scene" style="display: none;">
+      <img id="intro_image" src="" alt="Secluded Beach">
+      <p>Welcome to the Kids Learning Adventure Game!</p>
+      <p>You find yourself on a secluded beach, but you have lost your memory and don't know how you got there. Your goal is to survive until help arrives!</p>
+      <p>Make your choices wisely!</p>
+    </div>
+
+    <div id="forest_scene" class="scene" style="display: none;">
+      <img id="forest_image" src="" alt="Beach with Water and Rope">
+      <p>On the beach, you see two items, but you can only carry one of them. The first item is a bottle filled with clean water, and the second item is a rope. Which one do you take?</p>
+      <div class="button-container">
+        <button onclick="handleForestChoice('water')">Take the bottle of water</button>
+        <button onclick="handleForestChoice('rope')">Take the rope</button>
+      </div>
+    </div>
+
+    <div id="cave_not_thirsty_scene" class="scene" style="display: none;">
+      <img id="cave_image" src="" alt="Cave Entrance">
+      <p>You grab the bottle of water and start walking along the beach. You see a cave up ahead.</p>
+      <p>You enter the cave and see a small opening at the back. Do you go through the opening or stay in the cave?</p>
+      <div class="button-container">
+        <button onclick="handleCaveNotThirstyChoice('opening')">Go through the opening</button>
+        <button onclick="handleCaveNotThirstyChoice('stay')">Stay in the cave</button>
+      </div>
+    </div>
+
+    <div id="opening_cave_scene" class="scene" style="display: none;">
+      <img id="opening_image" src="" alt="Cave Riddle">
+      <p>The small opening in the back of the cave is just big enough for you to squeeze through. It leads to a hidden path. There is writing on the wall with a riddle you must solve to continue.</p>
+      <p>The riddle reads: 'Which one of these words is spelled correctly?'</p>
+      <div class="button-container">
+        <button onclick="handleOpeningCaveChoice('accommodate1')">Acommodate</button>
+        <button onclick="handleOpeningCaveChoice('accommodate2')">Accommodate</button>
+        <button onclick="handleOpeningCaveChoice('acomodate')">Acomodate</button>
+      </div>
+    </div>
+
+    <div id="stay_cave_scene" class="scene" style="display: none;">
+      <img id="stay_image" src="" alt="Sleeping in Cave">
+      <p>You decide it will be safer to stay in the cave. You find a comfortable spot to rest and fall asleep.</p>
+      <p>You wake up because you are cold. What items should you look for to build a fire?</p>
+      <div class="button-container">
+        <button onclick="handleStayCaveChoice('sticks')">Sticks and stones</button>
+        <button onclick="handleStayCaveChoice('water')">Water and leaves</button>
+      </div>
+    </div>
+
+    <div id="river_scene" class="scene" style="display: none;">
+      <img id="river_image" src="" alt="River with Old Man">
+      <p>The sun is very strong and there is no shelter on the beach. You decide to follow the river to find shade.</p>
+      <p>Up ahead, there is an old man sitting by the river. He offers you a ride on his boat if you can answer his question correctly.</p>
+      <p>What is 46 + 27?</p>
+      <input type="text" id="riverAnswer">
+      <button onclick="handleRiverChoice()">Answer</button>
+    </div>
+
+    <div id="happy_end_scene" class="scene">
+      <img id="happy_image" src="" alt="Candy House">
+      <p>You find a large house made of candy and chocolate. There is no scary witches that live here, it is empty. You decide to stay a while and eat some of the candy.</p>
+      <p>Congratulations! You have reached the happy ending of the game. You have survived and found a safe place to stay until help arrives.</p>
+      <p>Thank you for playing the Kids Learning Adventure Game!</p>
+    </div>
+
+    <div id="end_scene" class="scene">
+      <img id="end_image" src="" alt="Cold and Hungry">
+      <p>You become increasingly cold and hungry. You run out of fresh water. You are too weak to continue and succumb to the elements.</p>
+      <p>You have reached the end of the game. Thank you for playing the Kids Learning Adventure Game!</p>
+    </div>
+
+     <div id="fairy_scene" class="scene">
+      <img id="fairy_image" src="" alt="Fairy">
+      <p>The wall opens up to reveal a hidden path. You follow the path and find a fairy who offers to help you.</p>
+      <p>The fairy gives you a magic potion that will help you find your way home. You drink the potion and suddenly remember everything.</p>
+      <p>Congratulations! You have reached the happy ending of the game. You have survived and found a way to get home.</p>
+      <p>Thank you for playing the Kids Learning Adventure Game!</p>
+    </div>
+
+    <div id="output"></div>
+
+    <div id="play_again_container" style="text-align: center; margin-top: 20px; display: none;">
+      <button onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    let playerGender = null; // Store the player's gender
+
+    // Image URLs for each gender
+    const imageURLs = {
+      boy: {
+        intro: "Secluded-tropical-beach.png",
+        forest: "Close-up-glass-rope.png",
+        cave: "cave-beach.png",
+        opening: "wall-riddle.png",
+        stay: "cave-boy-sleep.png",
+        river: "old-man-boat.png",
+        happy: "choc-house.png",
+        end: "cave-boy-sleep.png",
+        fairy: "fairy-end.png"
+      },
+      girl: {
+        intro: "Secluded-tropical-beach.png",
+        forest: "Close-up-glass-rope.png",
+        cave: "cave-beach.png",
+        opening: "wall-riddle.png",
+        stay: "cave-girl-sleep.png",
+        river: "old-man-boat.png",
+        happy: "choc-house.png",
+        end: "cave-boy-sleep.png",
+        fairy: "fairy-end.png"
+      }
+    };
+
+    function setGender(gender) {
+      playerGender = gender;
+      loadImages();
+      showScene('introduction');
+      setTimeout(() => showScene('forest_scene'), 3000);
+    }
+
+    function loadImages() {
+      document.getElementById("intro_image").src = imageURLs[playerGender].intro;
+      document.getElementById("forest_image").src = imageURLs[playerGender].forest;
+      document.getElementById("cave_image").src = imageURLs[playerGender].cave;
+      document.getElementById("opening_image").src = imageURLs[playerGender].opening;
+      document.getElementById("stay_image").src = imageURLs[playerGender].stay;
+      document.getElementById("river_image").src = imageURLs[playerGender].river;
+      document.getElementById("happy_image").src = imageURLs[playerGender].happy;
+      document.getElementById("end_image").src = imageURLs[playerGender].end;
+      document.getElementById("fairy_image").src = imageURLs[playerGender].fairy;
+    }
+
+    function showScene(sceneId) {
+      const scenes = document.querySelectorAll('.scene');
+      scenes.forEach(scene => scene.style.display = 'none');
+      document.getElementById(sceneId).style.display = 'block';
+
+      // Determine if the current scene is an ending scene
+      const isEndingScene = ['happy_end_scene', 'end_scene', 'fairy_scene'].includes(sceneId);
+
+      // Show or hide the "Play Again" button based on whether it's an ending scene
+      document.getElementById('play_again_container').style.display = isEndingScene ? 'block' : 'none';
+    }
+
+    function handleForestChoice(choice) {
+      if (choice === 'water') {
+        showScene('cave_not_thirsty_scene');
+      } else if (choice === 'rope') {
+        showScene('river_scene');
+      }
+    }
+
+    function handleCaveNotThirstyChoice(choice) {
+      if (choice === 'opening') {
+        showScene('opening_cave_scene');
+      } else if (choice === 'stay') {
+        showScene('stay_cave_scene');
+      }
+    }
+
+     function handleOpeningCaveChoice(choice) {
+      if (choice === 'accommodate1') {
+        showScene('end_scene');
+      } else if (choice === 'accommodate2') {
+        showScene('fairy_scene');
+      } else if (choice === 'acomodate') {
+         showScene('end_scene');
+      }
+    }
+
+     function handleStayCaveChoice(choice) {
+      if (choice === 'sticks') {
+        showScene('happy_end_scene');
+      } else if (choice === 'water') {
+         showScene('end_scene');
+      }
+    }
+
+    function handleRiverChoice() {
+      const answer = document.getElementById('riverAnswer').value;
+      if (answer === '73') {
+        showScene('happy_end_scene');
+      } else {
+        showScene('end_scene');
+      }
+    }
+
+    function restartGame() {
+      // Reset all scenes to hidden
+      const scenes = document.querySelectorAll('.scene');
+      scenes.forEach(scene => scene.style.display = 'none');
+
+      // Clear any existing output
+      document.getElementById('output').textContent = '';
+
+      //Reset input value
+      document.getElementById('riverAnswer').value = '';
+
+      //Hide play again if necessary
+      document.getElementById('play_again_container').style.display = 'none';
+
+      //Show gender selection
+      showScene('gender_selection');
+    }
+
+    // Add this event listener:
+    document.addEventListener("DOMContentLoaded", function() {
+      showScene('gender_selection'); // Start with gender selection
+    });
+
+  </script>
+
+</body>
+</html>
